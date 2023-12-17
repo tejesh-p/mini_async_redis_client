@@ -1,4 +1,5 @@
 import asyncio
+import ssl
 
 
 class CommandNotFoundError(Exception): pass
@@ -100,4 +101,9 @@ class RedisClient:
         return await self.send("EXISTS", key)
 
     async def connect(self, host, port):
-        self.r, self.w = await asyncio.open_connection(host, port)
+        try:
+            ssl_context = ssl.create_default_context()
+            self.r, self.w = await asyncio.open_connection(host, port, ssl=ssl_context, ssl_handshake_timeout=5)
+        except Exception as e:
+            print("Failed to create a connection: ", e)
+            raise Exception("Failed to create a connection: ", e)

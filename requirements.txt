@@ -1,2 +1,2 @@
-gevent
-asyncio
+gevent==23.9.1
+asyncio==
